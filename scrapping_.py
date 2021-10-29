@@ -17,24 +17,56 @@ def get_all_songs_url():
         print(next_page)
         urls.extend([el['url'] for el in contenu.get('songs')])
     # pprint(urls)
-    with open("links.json", "w") as f:
-        json.dump(urls, f, indent=4)
     return urls
 
-get_all_songs_url()
+# Get all the songs links
+# with open("links.json", "w") as f:
+#         json.dump(get_all_songs_url(), f, indent=4)
 
-# def get_all_lyrics(links):
-#     lyrics_song = []
-#     for link in links:
-#         results = None
-#         while results == None:
-#             print(f"trying link number {links.index(link)}")
-#             song_page = requests.get(link)
-#             soup = BeautifulSoup(song_page.content, "html.parser")
-#             results = soup.find(id="lyrics-root")
-#         lyrics_song.extend([el for el in results.stripped_strings if "[" not in el and "]" not in el and el not in ["Share URL", "Copy","Embed"]][:-1])
-#         pprint(lyrics_song)
-#     with open("songs.json", "w") as f:
-#         json.dump(lyrics_song, f, indent=4)
+# get_all_songs_url()
+
+def get_all_lyrics(links):
+    lyrics_song = []
+    for link in links:
+        x = 0
+        results = None
+        while results == None:
+            print(f"trying link number {links.index(link)}")
+            song_page = requests.get(link)
+            soup = BeautifulSoup(song_page.content, "html.parser")
+            results = soup.find(id="lyrics-root")
+            x +=1
+            if x == 10:
+                break
+        if x != 10:
+            lyrics_song.extend([el for el in results.stripped_strings if "[" not in el and "]" not in el and el not in ["Share URL", "Copy","Embed"]][:-1])
+        # pprint(lyrics_song)
+    return lyrics_song
+
+# Get all the lyrics in all the song links   
+# with open("songs.json", "w") as f:
+#         json.dump(get_all_lyrics(get_all_songs_url()), f, indent=4)
 
 # get_all_lyrics(get_all_songs_url())
+
+#Test using the file
+# with open("links.json", "r") as f:
+#        les_liens = json.load(f)
+
+# # print(les_liens[367])
+
+# lyrics_song = []
+# for link in les_liens[365:369]:
+#     x = 0
+#     results = None
+#     while results == None:
+#         print(f"trying link number {les_liens.index(link)}")
+#         song_page = requests.get(link)
+#         soup = BeautifulSoup(song_page.content, "html.parser")
+#         results = soup.find(id="lyrics-root")
+#         x +=1
+#         if x == 10:
+#             break
+#     if x != 10:
+#         lyrics_song.extend([el for el in results.stripped_strings if "[" not in el and "]" not in el and el not in ["Share URL", "Copy","Embed"]][:-1])
+# pprint(lyrics_song)
